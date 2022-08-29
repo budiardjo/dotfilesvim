@@ -8,6 +8,12 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 
+" seting backspace 
+set backspace=indent,eol,start
+
+noremap <C-a> ggVG
+noremap <C-c> "+y
+
 syntax enable
 filetype plugin indent on
 " setting vim plug
@@ -46,28 +52,3 @@ autocmd VimEnter * NERDTree | wincmd p
 autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
 
-" seting escape mode for a good sake
-inoremap jk <esc> 
-
-" setting autozimu 
-" Remove 'tag' type from c-n completion. Call it explicitly via mucomplete instead.
-set complete=.,w,b,u,k
-set completeopt=menuone,noselect
-" Shut off completion messages
-set shortmess+=c
-
-let g:LanguageClient_serverCommands = {
-    \ 'cpp': ['/usr/bin/clangd']
-    \ }
-
-let g:mucomplete#force_manual = 1
-let g:mucomplete#enable_auto_at_startup = 1
-
-" setting for cpp highlight
-
-
-let g:cpp_class_scope_highlight = 1
-let g:cpp_member_variable_highlight = 1
-
-" setting rust vim
-let g:rustfmt_autosave = 1
