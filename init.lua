@@ -42,15 +42,6 @@ require('packer').startup(function(use)
     'nvim-treesitter/nvim-treesitter-textobjects',
     after = 'nvim-treesitter',
   }
- 
-  -- mapping escape
-  use {
-  "max397574/better-escape.nvim",
-  config = function()
-    require("better_escape").setup()
-  end,
-  }
-
   -- Git related plugins
   use 'tpope/vim-fugitive'
   use 'tpope/vim-rhubarb'
@@ -68,6 +59,13 @@ require('packer').startup(function(use)
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
 
+  use {
+  'nvim-tree/nvim-tree.lua',
+  requires = {
+    'nvim-tree/nvim-web-devicons', -- optional, for file icons
+  },
+  tag = 'nightly' -- optional, updated every week. (see issue #1193)
+  }
   -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, 'custom.plugins')
   if has_plugins then
@@ -109,6 +107,7 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
+vim.wo.relativenumber = true
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -432,16 +431,20 @@ cmp.setup {
   },
 }
 
--- lua, default settings
-require("better_escape").setup {
-    mapping = {"jk"}, -- a table with mappings to use
-    timeout = vim.o.timeoutlen, -- the time in which the keys must be hit in ms. Use option timeoutlen by default
-    clear_empty_lines = false, -- clear line after escaping if there is only whitespace
-    keys = "<Esc>", -- keys used for escaping, if it is a function will use the result everytime
-    -- example(recommended)
-    -- keys = function()
-    --   return vim.api.nvim_win_get_cursor(0)[2] > 1 and '<esc>l' or '<esc>'
-    -- end,
+-- disable netrw at the very start of your init.lua (strongly advised)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
+-- empty setup using defaults
+require("nvim-tree").setup{
+  open_on_setup = true,
+  ignore_buffer_on_setup = true,
 }
+
+vim.api.nvim_set_keymap("n", "<C-b>", ":NvimTreeToggle<cr>" ,{silent = true, noremap = true})
+vim.api.nvim_set_keymap("i", "jk", "<esc>", {noremap = true})
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
